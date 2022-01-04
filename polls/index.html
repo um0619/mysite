@@ -1,0 +1,13 @@
+#index.html
+<table class="table-contents" style="padding:10px">
+  <tr>
+    <th>제목</th>
+    <th>내용</th>
+  </tr>
+  {% for lopsample in lopsamples %}
+    <tr>
+      <td>{{lopsample.user_id}}</td>
+      <td>{{lopsample.age}}</td>
+  	</tr>
+  {%endfor%}
+</table>
