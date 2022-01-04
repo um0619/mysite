@@ -17,6 +17,8 @@ urlpatterns = [
     # # ex : /polls/5/vote/
     # path('<int:question_id>/vote/', views.vote, name='vote'),
     path('', views.IndexView.as_view(), name = 'index'),
+    path('question/', views.QuestionListAPIView.as_view()),
+    path('question/<int:pk>', views.QuestionListDetailAPIView.as_view()),
     path('<int:pk>/', views.DetailView.as_view(), name= 'detail'),
     path('<int:pk>/result/', views.ResultsView.as_view(), name='results'),
     path('<int:question_id>/vote/', views.vote, name='vote'),

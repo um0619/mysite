@@ -2,12 +2,17 @@
 import abc
 from re import template
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, Http404, HttpResponseRedirect, response
 from django.template import loader
+from rest_framework.serializers import Serializer
 from .models import Question, Choice
 from django.urls import reverse 
 from django.views import generic
 from django.utils import timezone
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from .serializers import QuestionSerializer
 
 #from .models import LopSample # LopSample 모델 불러오기
 
@@ -103,3 +108,22 @@ def vote(request, question_id):
             # Post로 View가 열리면 HttpResponseRedirect로 return 둘이 한세트임
             return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
+class QuestionListAPIView(APIView):
+    def get(self, request):
+        serializer = QuestionSerializer(Question.objects.all(), many=True)
+        #question = self.get_object(pk=pk)
+        #serializer = QuestionSerializer(question)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = QuestionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
+class QuestionListDetailAPIView(APIView):
+    def get(self, request, pk):
+        question = get_object_or_404(Question, pk =pk)
+        
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
